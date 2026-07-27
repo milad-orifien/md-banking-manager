@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Registrieren · MD Banking Manager{% endblock %}
+{% block content %}
+<section class="panel form-panel">
+    <p class="eyebrow">Benutzerkonto</p>
+    <h1>Registrieren</h1>
+    <p class="muted">Mit * markierte Angaben werden für das Benutzerkonto benötigt. Alter und Bankinstitut sind freiwillig.</p>
+    <form method="post" class="form-grid">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <div class="form-field">
+            <label for="first-name">Vorname *</label>
+            <input id="first-name" type="text" name="vorname" maxlength="50" autocomplete="given-name" required value="{{ form.get('vorname', '') }}">
+        </div>
+        <div class="form-field">
+            <label for="last-name">Nachname *</label>
+            <input id="last-name" type="text" name="nachname" maxlength="100" autocomplete="family-name" required value="{{ form.get('nachname', '') }}">
+        </div>
+        <div class="form-field">
+            <label for="register-email">E-Mail-Adresse *</label>
+            <input id="register-email" type="email" name="email" maxlength="100" autocomplete="email" required value="{{ form.get('email', '') }}">
+        </div>
+        <div class="form-field">
+            <label for="age">Alter (optional)</label>
+            <input id="age" type="number" name="alter" min="1" max="119" value="{{ form.get('alter', '') }}">
+        </div>
+        <div class="form-field full-width">
+            <label for="bank-name">Bankinstitut (optional)</label>
+            <input id="bank-name" type="text" name="bankinstitut" maxlength="100" value="{{ form.get('bankinstitut', '') }}">
+            <p class="help">Diese Angabe dient nur als Profilinformation. Es wird keine Verbindung zu einer realen Bank hergestellt.</p>
+        </div>
+        <div class="form-field">
+            <label for="register-password">Passwort *</label>
+            <input id="register-password" type="password" name="passwort" autocomplete="new-password" required>
+        </div>
+        <div class="form-field">
+            <label for="register-password-repeat">Passwort wiederholen *</label>
+            <input id="register-password-repeat" type="password" name="passwort2" autocomplete="new-password" required>
+        </div>
+        <p class="help full-width">Mindestens acht Zeichen, ein Großbuchstabe, ein Kleinbuchstabe und ein Sonderzeichen. Das Sonderzeichen darf nicht am Anfang oder Ende stehen.</p>
+        <button class="button full-width" type="submit">Benutzerkonto erstellen</button>
+    </form>
+    <p class="form-footer">Bereits registriert? <a href="{{ url_for('auth.login') }}">Zur Anmeldung</a></p>
+</section>
+{% endblock %}

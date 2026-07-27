@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Finanzkonto anlegen · MD Banking Manager{% endblock %}
+{% block content %}
+<section class="panel form-panel narrow">
+    <p class="eyebrow">Meine Finanzkonten</p>
+    <h1>Finanzkonto anlegen</h1>
+    <p class="muted">Geben Sie einen gewünschten Namen für das neue Finanzkonto ein, z. B. „Girokonto“, „Sparkonto“ oder „Studium“.</p>
+    <form method="post" class="stack-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="account-name">Name des Finanzkontos</label>
+        <input id="account-name" type="text" name="kontoname" maxlength="100" placeholder="z. B. Girokonto" required>
+        <button class="button" type="submit">Finanzkonto anlegen</button>
+    </form>
+</section>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Start · MD Banking Manager{% endblock %}
+{% block content %}
+<section class="hero">
+    <div class="hero-copy">
+        <p class="eyebrow">MD Banking Manager</p>
+        <h1>Finanzen ganz einfach</h1>
+        <p class="lead">
+            Verwalten Sie Finanzkonten und Ausgaben übersichtlich an einem Ort.
+            Buchungen lassen sich erfassen, automatisch kategorisieren, durchsuchen und auswerten.
+        </p>
+        <div class="button-row hero-actions">
+            {% if session.get('kundenid') %}
+                <a class="button" href="{{ url_for('banking.dashboard') }}">Finanzkonten öffnen</a>
+                <a class="button button-secondary" href="{{ url_for('banking.report') }}">Auswertung anzeigen</a>
+            {% else %}
+                <a class="button" href="{{ url_for('auth.register') }}">Benutzerkonto erstellen</a>
+                <a class="button button-secondary" href="{{ url_for('auth.login') }}">Anmelden</a>
+            {% endif %}
+        </div>
+    </div>
+    <aside class="hero-card" aria-label="Kurzüberblick">
+        <p class="hero-card-label">Einfach organisiert</p>
+        <strong>Finanzkonten, Buchungen und Auswertungen an einem Ort.</strong>
+        <p>Die Anwendung verbindet sich nicht mit einer realen Bank. Nutzer legen eigene Finanzkonten an und erfassen oder importieren die zugehörigen Buchungen.</p>
+    </aside>
+</section>
+
+<section class="home-section">
+    <div class="section-intro">
+        <p class="eyebrow">Überblick</p>
+        <h2>Wichtigste Funktionen</h2>
+    </div>
+    <div class="feature-grid">
+        <article class="feature-card"><span class="feature-number">01</span><h3>Finanzkonten verwalten</h3><p>Mehrere Finanzkonten getrennt anlegen und den jeweiligen Kontostand im Blick behalten.</p></article>
+        <article class="feature-card"><span class="feature-number">02</span><h3>Buchungen erfassen</h3><p>Einnahmen und Ausgaben manuell hinzufügen oder aus einer Excel-Datei importieren.</p></article>
+        <article class="feature-card"><span class="feature-number">03</span><h3>Automatisch kategorisieren</h3><p>Eigene Kategorien und Schlagwörter helfen dabei, Ausgaben übersichtlich zuzuordnen.</p></article>
+        <article class="feature-card"><span class="feature-number">04</span><h3>Finanzen auswerten</h3><p>Ausgaben nach Kategorie, Finanzkonto und Zeitraum zusammenfassen und vergleichen.</p></article>
+        <article class="feature-card"><span class="feature-number">05</span><h3>Suchen und sortieren</h3><p>Buchungen nach Empfänger, Verwendungszweck, Zeitraum oder Betrag filtern und sortieren.</p></article>
+        <article class="feature-card"><span class="feature-number">06</span><h3>Gemeinsam nutzen</h3><p>Gruppen erstellen, Einladungen versenden und Finanzkonten innerhalb der Gruppe einsehen.</p></article>
+    </div>
+</section>
+{% endblock %}

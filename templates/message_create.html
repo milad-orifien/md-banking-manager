@@ -1,0 +1,5 @@
+{% extends "base.html" %}
+{% block title %}Nachricht schreiben · MD Banking Manager{% endblock %}
+{% block content %}
+<section class="panel form-panel"><p class="eyebrow">Private Nachricht</p><h1>Nachricht schreiben</h1><form method="post" class="stack-form"><input type="hidden" name="csrf_token" value="{{ csrf_token() }}"><label for="recipient-email">E-Mail-Adresse des Empfängers</label><input id="recipient-email" type="email" name="email" required value="{{ form.get('email', '') }}"><label for="message-subject">Betreff</label><input id="message-subject" type="text" name="betreff" maxlength="150" required value="{{ form.get('betreff', '') }}"><label for="message-content">Nachricht</label><textarea id="message-content" name="inhalt" rows="7" maxlength="3000" required>{{ form.get('inhalt', '') }}</textarea><button class="button" type="submit">Nachricht senden</button></form></section>
+{% endblock %}

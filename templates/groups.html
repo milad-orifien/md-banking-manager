@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% block title %}Gruppen · MD Banking Manager{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">Gemeinsame Finanzen</p>
+        <h1>Gruppen</h1>
+        <p class="muted">Gruppen ermöglichen die gemeinsame Einsicht in Finanzkonten, Buchungen und Auswertungen.</p>
+    </div>
+</div>
+
+<div class="two-column">
+    <section class="panel">
+        <h2>Neue Gruppe</h2>
+        <form method="post" class="stack-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="group-name">Gruppenname</label>
+            <input id="group-name" type="text" name="gruppenname" maxlength="100" placeholder="z. B. WG Finanzen" required>
+            <button class="button" type="submit">Gruppe erstellen</button>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>Meine Gruppen</h2>
+        <div class="group-card-list">
+            {% for group in groups %}
+                <article class="group-card">
+                    <div>
+                        <h3>{{ group.gruppenname }}</h3>
+                        <div class="group-meta">
+                            <span>{{ group.mitgliederzahl }} {{ 'Mitglied' if group.mitgliederzahl == 1 else 'Mitglieder' }}</span>
+                            <span>{{ group.kontenzahl|default(0) }} {{ 'Finanzkonto' if group.kontenzahl|default(0) == 1 else 'Finanzkonten' }}</span>
+                        </div>
+                    </div>
+                    <a class="button button-small" href="{{ url_for('community.group_detail', group_id=group.gruppenid) }}">Gruppe öffnen</a>
+                </article>
+            {% else %}
+                <p class="empty">Noch keine Gruppe vorhanden.</p>
+            {% endfor %}
+        </div>
+    </section>
+</div>
+{% endblock %}

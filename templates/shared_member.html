@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Finanzkonten von {{ owner.vorname }} · MD Banking Manager{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">Gruppenmitglied</p>
+        <h1>Finanzkonten von {{ owner.vorname }} {{ owner.nachname }}</h1>
+        <p class="muted">Diese Ansicht ist schreibgeschützt. Änderungen an fremden Daten sind nicht möglich.</p>
+    </div>
+    <a class="button button-secondary" href="{{ url_for('community.group_detail', group_id=group_id) }}">Zur Gruppe</a>
+</div>
+
+<section class="account-grid">
+    {% for account in accounts %}
+        <article class="account-card">
+            <div><p class="card-label">Finanzkonto</p><h2>{{ account.kontoname }}</h2></div>
+            <p class="balance {{ 'positive' if account.kontostand >= 0 else 'negative' }}">{{ account.kontostand|euro }}</p>
+            <a class="button button-small" href="{{ url_for('community.shared_account', group_id=group_id, owner_id=owner.kundenid, account_id=account.kontoid) }}">Finanzkonto ansehen</a>
+        </article>
+    {% else %}
+        <p class="empty">Dieses Gruppenmitglied hat noch kein Finanzkonto angelegt.</p>
+    {% endfor %}
+</section>
+
+<section class="panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Gemeinsame Auswertung</p>
+            <h2>Ausgaben nach Kategorien</h2>
+            <p class="muted">Die Übersicht fasst die Ausgaben aller Finanzkonten dieses Gruppenmitglieds zusammen.</p>
+        </div>
+        <strong class="report-total">{{ report_total|euro }}</strong>
+    </div>
+    {% for row in report_rows %}
+        <div class="bar-row">
+            <div class="bar-label">
+                <span>{{ row.kategorie|kategorie_anzeige }}</span>
+                <strong>{{ row.summe|euro }} · {{ row.anteil|prozent }}</strong>
+            </div>
+            <div class="bar-track"><div class="bar-fill" style="width: {{ row.anteil }}%"></div></div>
+        </div>
+    {% else %}
+        <p class="empty">Für dieses Gruppenmitglied sind noch keine Ausgaben vorhanden.</p>
+    {% endfor %}
+</section>
+{% endblock %}

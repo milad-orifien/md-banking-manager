@@ -1,0 +1,3 @@
+{% extends "base.html" %}
+{% block title %}{{ title }} · MD Banking Manager{% endblock %}
+{% block content %}<section class="panel narrow error-panel"><p class="eyebrow">Hinweis</p><h1>{{ title }}</h1><p>{{ message }}</p><a class="button" href="{{ url_for('index') }}">Zur Startseite</a></section>{% endblock %}

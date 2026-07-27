@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+{% block title %}Profil · MD Banking Manager{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">Benutzerkonto</p>
+        <h1>Profil</h1>
+        <p class="muted">Hier können Sie Ihre persönlichen Angaben verwalten und Ihr Passwort ändern.</p>
+    </div>
+</div>
+
+<div class="two-column profile-grid">
+    <section class="panel">
+        <div class="section-heading">
+            <div><p class="eyebrow">Persönliche Daten</p><h2>Profilangaben</h2></div>
+        </div>
+        <dl class="detail-list">
+            <div><dt>Name</dt><dd>{{ user.vorname }} {{ user.nachname }}</dd></div>
+            <div><dt>E-Mail</dt><dd>{{ user.email }}<small class="detail-note">Feste Login-Adresse</small></dd></div>
+            <div><dt>Alter</dt><dd>{{ user.alter if user.alter else 'Nicht angegeben' }}</dd></div>
+            <div><dt>Bankinstitut</dt><dd>{{ user.bankinstitut if user.bankinstitut else 'Nicht angegeben' }}</dd></div>
+        </dl>
+
+        <details class="nested-details">
+            <summary>Profildaten bearbeiten</summary>
+            <form method="post" action="{{ url_for('auth.update_profile') }}" class="form-grid top-space">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <div class="form-field">
+                    <label for="profile-first-name">Vorname</label>
+                    <input id="profile-first-name" type="text" name="vorname" maxlength="50" value="{{ user.vorname }}" required>
+                </div>
+                <div class="form-field">
+                    <label for="profile-last-name">Nachname</label>
+                    <input id="profile-last-name" type="text" name="nachname" maxlength="100" value="{{ user.nachname }}" required>
+                </div>
+                <div class="form-field">
+                    <label for="profile-age">Alter (optional)</label>
+                    <input id="profile-age" type="number" name="alter" min="1" max="119" value="{{ user.alter or '' }}">
+                </div>
+                <div class="form-field">
+                    <label for="profile-bank">Bankinstitut (optional)</label>
+                    <input id="profile-bank" type="text" name="bankinstitut" maxlength="100" value="{{ user.bankinstitut or '' }}">
+                </div>
+                <p class="help full-width">Die E-Mail-Adresse wird zur Anmeldung verwendet und kann in dieser Projektversion nicht geändert werden.</p>
+                <button class="button full-width" type="submit">Profildaten speichern</button>
+            </form>
+        </details>
+    </section>
+
+    <section class="panel">
+        <div class="section-heading">
+            <div><p class="eyebrow">Sicherheit</p><h2>Passwort</h2></div>
+        </div>
+        <details class="nested-details nested-details-first">
+            <summary>Passwort ändern</summary>
+            <form method="post" action="{{ url_for('auth.change_password') }}" class="stack-form top-space">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <label for="current-password">Aktuelles Passwort</label>
+                <input id="current-password" type="password" name="aktuelles_passwort" autocomplete="current-password" required>
+                <label for="new-password">Neues Passwort</label>
+                <input id="new-password" type="password" name="neues_passwort" autocomplete="new-password" required>
+                <label for="new-password-repeat">Neues Passwort wiederholen</label>
+                <input id="new-password-repeat" type="password" name="neues_passwort2" autocomplete="new-password" required>
+                <p class="help">Mindestens acht Zeichen, ein Großbuchstabe, ein Kleinbuchstabe und ein Sonderzeichen. Das Sonderzeichen darf nicht am Anfang oder Ende stehen.</p>
+                <button class="button" type="submit">Passwort speichern</button>
+            </form>
+        </details>
+    </section>
+</div>
+{% endblock %}

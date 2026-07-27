@@ -1,0 +1,160 @@
+{% extends "base.html" %}
+{% block title %}Kategorien · MD Banking Manager{% endblock %}
+
+{% macro category_card(category, keywords) %}
+<article class="category-card">
+    <div class="category-card-heading">
+        <h3>{{ category.bezeichnung }}</h3>
+        <div class="category-card-actions">
+            <button
+                class="button button-tiny button-secondary"
+                type="button"
+                data-dialog-id="edit-category-{{ category.kategorieid }}">
+                Bearbeiten
+            </button>
+            <form method="post" action="{{ url_for('banking.delete_category', category_id=category.kategorieid) }}">
+                <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                <button
+                    class="button button-tiny button-danger-outline"
+                    type="submit"
+                    data-confirm="Kategorie „{{ category.bezeichnung }}“ wirklich löschen? Zugehörige Schlagwörter werden gelöscht. Bereits zugeordnete Buchungen werden anschließend als „Ohne Kategorie“ geführt.">
+                    Löschen
+                </button>
+            </form>
+        </div>
+    </div>
+
+    {% if keywords %}
+        <ul class="keyword-list">
+            {% for keyword in keywords %}
+                <li class="keyword-row">
+                    <span class="keyword-name">{{ keyword.wort|schlagwort_anzeige }}</span>
+                    <div class="keyword-actions">
+                        <button
+                            class="button button-tiny button-secondary"
+                            type="button"
+                            data-dialog-id="edit-keyword-{{ keyword.schlagwortid }}">
+                            Bearbeiten
+                        </button>
+                        <form method="post" action="{{ url_for('banking.delete_keyword', keyword_id=keyword.schlagwortid) }}">
+                            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                            <button
+                                class="button button-tiny button-danger-outline"
+                                type="submit"
+                                data-confirm="Schlagwort „{{ keyword.wort|schlagwort_anzeige }}“ wirklich löschen?">
+                                Löschen
+                            </button>
+                        </form>
+                    </div>
+                </li>
+
+                <dialog class="edit-dialog" id="edit-keyword-{{ keyword.schlagwortid }}">
+                    <div class="dialog-heading">
+                        <h2>Schlagwort bearbeiten</h2>
+                        <button class="dialog-close" type="button" data-close-dialog aria-label="Fenster schließen">×</button>
+                    </div>
+                    <form method="post" action="{{ url_for('banking.update_keyword', keyword_id=keyword.schlagwortid) }}" class="stack-form">
+                        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+                        <label for="keyword-{{ keyword.schlagwortid }}">Schlagwort</label>
+                        <input
+                            id="keyword-{{ keyword.schlagwortid }}"
+                            type="text"
+                            name="wort"
+                            maxlength="100"
+                            value="{{ keyword.wort|schlagwort_anzeige }}"
+                            required>
+                        <div class="dialog-actions">
+                            <button class="button button-secondary" type="button" data-close-dialog>Abbrechen</button>
+                            <button class="button" type="submit">Speichern</button>
+                        </div>
+                    </form>
+                </dialog>
+            {% endfor %}
+        </ul>
+    {% else %}
+        <p class="category-empty-note">Noch keine Schlagwörter vorhanden.</p>
+    {% endif %}
+
+    <dialog class="edit-dialog" id="edit-category-{{ category.kategorieid }}">
+        <div class="dialog-heading">
+            <h2>Kategorie bearbeiten</h2>
+            <button class="dialog-close" type="button" data-close-dialog aria-label="Fenster schließen">×</button>
+        </div>
+        <form method="post" action="{{ url_for('banking.update_category', category_id=category.kategorieid) }}" class="stack-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="category-{{ category.kategorieid }}">Kategoriename</label>
+            <input
+                id="category-{{ category.kategorieid }}"
+                type="text"
+                name="bezeichnung"
+                maxlength="80"
+                value="{{ category.bezeichnung }}"
+                required>
+            <div class="dialog-actions">
+                <button class="button button-secondary" type="button" data-close-dialog>Abbrechen</button>
+                <button class="button" type="submit">Speichern</button>
+            </div>
+        </form>
+    </dialog>
+</article>
+{% endmacro %}
+
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">Automatische Zuordnung</p>
+        <h1>Kategorien</h1>
+        <p class="muted">Schlagwörter werden bei neuen Buchungen im Empfänger und im Verwendungszweck gesucht.</p>
+    </div>
+</div>
+
+<div class="two-column">
+    <section class="panel">
+        <h2>Neue Kategorie</h2>
+        <form method="post" action="{{ url_for('banking.add_category') }}" class="stack-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="category-name">Bezeichnung</label>
+            <input id="category-name" type="text" name="bezeichnung" maxlength="80" placeholder="z. B. Versicherungen" required>
+            <button class="button" type="submit">Kategorie anlegen</button>
+        </form>
+    </section>
+
+    <section class="panel">
+        <h2>Schlagwort hinzufügen</h2>
+        <form method="post" action="{{ url_for('banking.add_keyword') }}" class="stack-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="keyword-category">Kategorie</label>
+            <select id="keyword-category" name="kategorieid" required>
+                {% for category in manageable_categories %}
+                    <option value="{{ category.kategorieid }}">{{ category.bezeichnung }}</option>
+                {% endfor %}
+            </select>
+            <label for="keyword-word">Schlagwort</label>
+            <input id="keyword-word" type="text" name="wort" maxlength="100" placeholder="z. B. Edeka" required>
+            <button class="button" type="submit">Schlagwort hinzufügen</button>
+        </form>
+    </section>
+</div>
+
+<section class="panel">
+    <div class="section-heading">
+        <div>
+            <p class="eyebrow">Übersicht</p>
+            <h2>Vorhandene Kategorien</h2>
+        </div>
+    </div>
+
+    {% if categories_with_keywords or empty_categories %}
+        <div class="category-list">
+            {% for category in categories_with_keywords %}
+                {{ category_card(category, category.schlagwoerter) }}
+            {% endfor %}
+            {% for category in empty_categories %}
+                {{ category_card(category, []) }}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p class="empty">Noch keine Kategorien vorhanden.</p>
+    {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Anmelden · MD Banking Manager{% endblock %}
+{% block content %}
+<section class="panel form-panel narrow">
+    <p class="eyebrow">Benutzerkonto</p>
+    <h1>Anmelden</h1>
+    <p class="muted">Melden Sie sich mit der E-Mail-Adresse und dem Passwort Ihres Benutzerkontos an.</p>
+    <form method="post" class="stack-form">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="login-email">E-Mail-Adresse</label>
+        <input id="login-email" type="email" name="email" autocomplete="email" required value="{{ form.get('email', '') }}">
+        <label for="login-password">Passwort</label>
+        <input id="login-password" type="password" name="passwort" autocomplete="current-password" required>
+        <button class="button" type="submit">Anmelden</button>
+    </form>
+    <p class="form-footer">Noch nicht registriert? <a href="{{ url_for('auth.register') }}">Benutzerkonto erstellen</a></p>
+</section>
+{% endblock %}

@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Excel-Import · MD Banking Manager{% endblock %}
+{% block content %}
+<section class="panel form-panel">
+    <p class="eyebrow">{{ account.kontoname }}</p>
+    <h1>Buchungen aus Excel importieren</h1>
+    <p>Die ersten vier Spalten müssen genau diese Überschriften besitzen:</p>
+    <code>Wertstellung | Betrag | Empfänger | Verwendungszweck</code>
+    <p class="muted">Buchungen ohne passendes Schlagwort werden intern der Auffangkategorie zugeordnet und in der Oberfläche als „Ohne Kategorie“ angezeigt. Die Datei darf höchstens 5 MB groß sein.</p>
+    <form method="post" enctype="multipart/form-data" class="stack-form top-space">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <label for="excel-file">Excel-Datei (.xlsx)</label>
+        <input id="excel-file" type="file" name="datei" accept=".xlsx" required>
+        <button class="button" type="submit">Datei importieren</button>
+    </form>
+</section>
+{% endblock %}

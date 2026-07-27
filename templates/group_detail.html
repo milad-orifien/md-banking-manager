@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{{ group.gruppenname }} · MD Banking Manager{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">Gruppe</p>
+        <h1>{{ group.gruppenname }}</h1>
+        <p class="muted">Mitglieder können die freigegebenen Finanzkonten und Buchungen innerhalb der Gruppe einsehen.</p>
+    </div>
+    <a class="button button-secondary" href="{{ url_for('community.groups') }}">Alle Gruppen</a>
+</div>
+<div class="two-column">
+    <section class="panel">
+        <h2>Mitglieder</h2>
+        <div class="member-list">
+            {% for member in members %}
+                <article class="member-row">
+                    <div class="member-info">
+                        <strong>{{ member.vorname }} {{ member.nachname }}</strong>
+                        <span>{{ member.email }}</span>
+                    </div>
+                    <a class="button button-small button-secondary" href="{{ url_for('community.shared_member', group_id=group.gruppenid, owner_id=member.kundenid) }}">Finanzkonten ansehen</a>
+                </article>
+            {% else %}
+                <p class="empty">Noch keine Mitglieder vorhanden.</p>
+            {% endfor %}
+        </div>
+    </section>
+    <section class="panel">
+        <h2>Mitglied einladen</h2>
+        <p class="muted">Die Person muss bereits registriert sein. Der Einladungslink wird als private Nachricht versendet.</p>
+        <form method="post" action="{{ url_for('community.invite', group_id=group.gruppenid) }}" class="stack-form">
+            <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+            <label for="invite-email">E-Mail-Adresse</label>
+            <input id="invite-email" type="email" name="email" required>
+            <button class="button" type="submit">Einladung senden</button>
+        </form>
+    </section>
+</div>
+{% endblock %}

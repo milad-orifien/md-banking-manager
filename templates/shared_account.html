@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}{{ account.kontoname }} · Gruppenansicht{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">Schreibgeschützte Gruppenansicht</p>
+        <h1>{{ account.kontoname }} von {{ owner.vorname }} {{ owner.nachname }}</h1>
+        <p class="balance {{ 'positive' if account.kontostand >= 0 else 'negative' }}">{{ account.kontostand|euro }}</p>
+    </div>
+    <a class="button button-secondary" href="{{ url_for('community.shared_member', group_id=group_id, owner_id=owner.kundenid) }}">Zurück</a>
+</div>
+<section class="panel">
+    <div class="table-wrap">
+        <table class="striped-table">
+            <thead><tr><th>Wertstellung</th><th>Empfänger</th><th>Verwendungszweck</th><th>Kategorie</th><th class="align-right">Betrag</th></tr></thead>
+            <tbody>
+            {% for entry in entries %}
+                <tr>
+                    <td>{{ entry.wertstellungsdatum|datum_zeit }}</td>
+                    <td>{{ entry.empfaenger }}</td>
+                    <td>{{ entry.verwendungszweck }}</td>
+                    <td><span class="tag">{{ entry.kategorie|kategorie_anzeige }}</span></td>
+                    <td class="align-right amount {{ 'positive' if entry.betrag > 0 else 'negative' }}">{{ entry.betrag|euro }}</td>
+                </tr>
+            {% else %}<tr><td colspan="5" class="empty">Keine Buchungen vorhanden.</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

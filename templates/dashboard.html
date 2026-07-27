@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Meine Finanzkonten · MD Banking Manager{% endblock %}
+{% block content %}
+<div class="page-heading">
+    <div>
+        <p class="eyebrow">Finanzübersicht</p>
+        <h1>Meine Finanzkonten</h1>
+        <p class="muted">Hallo {{ session.vorname }}, hier finden Sie Ihre Finanzkonten und die letzten Buchungen.</p>
+    </div>
+    <a class="button" href="{{ url_for('banking.create_account') }}">Finanzkonto anlegen</a>
+</div>
+
+<section class="account-grid">
+    {% for account in accounts %}
+        <article class="account-card">
+            <div>
+                <p class="card-label">Finanzkonto</p>
+                <h2>{{ account.kontoname }}</h2>
+                <p class="muted">{{ account.anzahl_eintraege }} {{ 'Buchung' if account.anzahl_eintraege == 1 else 'Buchungen' }}</p>
+            </div>
+            <p class="balance {{ 'positive' if account.kontostand >= 0 else 'negative' }}">{{ account.kontostand|euro }}</p>
+            <a class="button button-small" href="{{ url_for('banking.account_detail', account_id=account.kontoid) }}">Finanzkonto anzeigen</a>
+        </article>
+    {% endfor %}
+</section>
+
+<section class="panel">
+    <div class="section-heading">
+        <div><p class="eyebrow">Zuletzt gebucht</p><h2>Letzte fünf Buchungen</h2></div>
+    </div>
+    <div class="table-wrap">
+        <table class="striped-table">
+            <thead>
+                <tr><th>Wertstellung</th><th>Finanzkonto</th><th>Empfänger</th><th>Kategorie</th><th class="align-right">Betrag</th></tr>
+            </thead>
+            <tbody>
+            {% for entry in latest_entries %}
+                <tr>
+                    <td>{{ entry.wertstellungsdatum|datum_zeit }}</td>
+                    <td><a class="account-pill" href="{{ url_for('banking.account_detail', account_id=entry.kontoid) }}">{{ entry.kontoname }}</a></td>
+                    <td>{{ entry.empfaenger }}</td>
+                    <td><span class="tag">{{ entry.kategorie|kategorie_anzeige }}</span></td>
+                    <td class="align-right amount {{ 'positive' if entry.betrag > 0 else 'negative' }}">{{ entry.betrag|euro }}</td>
+                </tr>
+            {% else %}<tr><td colspan="5" class="empty">Noch keine Buchungen vorhanden.</td></tr>{% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}
